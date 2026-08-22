@@ -104,6 +104,35 @@ export function apply(ctx: Context): void {
           return
         }
 
+        if (req.method === 'POST' && endpoint === 'test-provider') {
+          const body = await readBody(req) as { envVar?: string; url?: string }
+          if (!body.envVar || !body.url) {
+            fail(res, 400, 'Missing envVar or url')
+            return
+          }
+          const ref = credentialRef(body.envVar)
+          const cred = await ctx.credentials.resolve(ref)
+          if (!cred) {
+            fail(res, 404, `No API key found for ${body.envVar}`)
+            return
+          }
+          try {
+            const response = await fetchWithTimeout(body.url, {
+              method: 'GET',
+              headers: { 'Authorization': `Bearer ${cred.value}` },
+            })
+            if (response.ok) {
+              ok(res, { success: true })
+            } else {
+              ok(res, { success: false, status: response.status })
+            }
+          } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : String(err)
+            ok(res, { success: false, error: message })
+          }
+          return
+        }
+
         if (req.method === 'POST' && endpoint === 'balance') {
           const body = await readBody(req) as { providerId?: string }
           const providerId = body.providerId

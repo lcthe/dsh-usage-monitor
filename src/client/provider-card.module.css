@@ -236,6 +236,11 @@
   border-top: 1px solid var(--dsw-alias-border-l2);
 }
 
+.footerActions {
+  display: flex;
+  gap: 4px;
+}
+
 .consoleLink {
   font-size: 11px;
   color: var(--dsw-alias-label-tertiary);
@@ -273,4 +278,55 @@
 .refreshBtn:focus-visible {
   outline: 2px solid var(--dsw-alias-brand-primary);
   outline-offset: -1px;
+}
+
+.testBtn {
+  appearance: none;
+  border: 1px solid var(--dsw-alias-border-l2);
+  border-radius: 7px;
+  padding: 3px 8px;
+  background: none;
+  color: var(--dsw-alias-label-tertiary);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.testBtn:hover:not(:disabled) {
+  background: var(--dsw-alias-bg-layer-1);
+  color: var(--dsw-alias-label-primary);
+}
+
+.testBtn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.testOk {
+  border-color: var(--dsw-alias-state-success-primary);
+  color: var(--dsw-alias-state-success-primary);
+}
+
+.testFail {
+  border-color: var(--dsw-alias-state-error-primary);
+  color: var(--dsw-alias-state-error-primary);
+}
+
+.removeBtn {
+  appearance: none;
+  border: none;
+  border-radius: 7px;
+  padding: 3px 8px;
+  background: none;
+  color: var(--dsw-alias-label-tertiary);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.removeBtn:hover {
+  background: var(--dsw-alias-interactive-bg-hover-danger);
+  color: var(--dsw-alias-state-error-primary);
 }

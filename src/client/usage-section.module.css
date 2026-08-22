@@ -118,3 +118,40 @@
   grid-auto-rows: auto;
   gap: 10px;
 }
+
+.addCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 80px;
+  border: 1px dashed var(--dsw-alias-border-l3);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--dsw-alias-label-tertiary);
+  font: inherit;
+  cursor: pointer;
+  transition: all 0.16s;
+}
+
+.addCard:hover {
+  border-color: var(--dsw-alias-label-dimmed);
+  background: var(--dsw-alias-bg-layer-1);
+  color: var(--dsw-alias-label-primary);
+}
+
+.addCard:focus-visible {
+  outline: 2px solid var(--dsw-alias-brand-primary);
+  outline-offset: -1px;
+}
+
+.addIcon {
+  font-size: 20px;
+  line-height: 1;
+  font-weight: 300;
+}
+
+.addLabel {
+  font-size: 12px;
+}

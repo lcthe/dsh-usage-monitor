@@ -4,6 +4,7 @@ import type { PropsRuntime, PropsLocale } from '@deepseek-ai/dsh-client-ui-slots
 import { NS } from './locales.ts'
 import { usageRpc } from './index.ts'
 import { ProviderCard, type ProviderInfo, type BalanceData } from './ProviderCard.tsx'
+import { AddProviderDialog, type CustomProvider } from './AddProviderDialog.tsx'
 import css from './usage-section.module.css'
 
 type UsageSectionProps = PropsRuntime<'settings.section'> & PropsLocale<typeof NS>
@@ -12,9 +13,14 @@ type BalanceState = Record<string, { data: BalanceData | null; loading: boolean 
 
 export function UsageSection({ t }: UsageSectionProps): JSX.Element | null {
   const [providers, setProviders] = useState<ProviderInfo[]>([])
+  const [customProviders, setCustomProviders] = useState<CustomProvider[]>(() => {
+    try { return JSON.parse(localStorage.getItem('dsh-usage-monitor-custom') ?? '[]') }
+    catch { return [] }
+  })
   const [loading, setLoading] = useState(true)
   const [balances, setBalances] = useState<BalanceState>({})
   const [filter, setFilter] = useState<'all' | 'configured' | 'supported'>('all')
+  const [showAddDialog, setShowAddDialog] = useState(false)
 
   const loadProviders = useCallback(async () => {
     setLoading(true)
@@ -57,6 +63,20 @@ export function UsageSection({ t }: UsageSectionProps): JSX.Element | null {
     }
   }, [providers, balances, queryBalance])
 
+  const saveCustomProviders = useCallback((list: CustomProvider[]) => {
+    setCustomProviders(list)
+    localStorage.setItem('dsh-usage-monitor-custom', JSON.stringify(list))
+  }, [])
+
+  const handleAddCustom = useCallback((p: CustomProvider) => {
+    saveCustomProviders([...customProviders, p])
+    setShowAddDialog(false)
+  }, [customProviders, saveCustomProviders])
+
+  const handleRemoveCustom = useCallback((id: string) => {
+    saveCustomProviders(customProviders.filter(p => p.id !== id))
+  }, [customProviders, saveCustomProviders])
+
   const refreshAll = useCallback(() => {
     setBalances({})
     void loadProviders()
@@ -78,6 +98,18 @@ export function UsageSection({ t }: UsageSectionProps): JSX.Element | null {
     )
   }
 
+  const allProviders = [...providers, ...customProviders.map(cp => ({
+    ...cp,
+    configured: false,
+    supportBalance: false,
+  }))]
+
+  const filteredAll = allProviders.filter(p => {
+    if (filter === 'configured') return p.configured
+    if (filter === 'supported') return p.configured && p.supportBalance
+    return true
+  })
+
   return (
     <div className={css.root}>
       <div className={css.header}>
@@ -96,7 +128,7 @@ export function UsageSection({ t }: UsageSectionProps): JSX.Element | null {
             className={`${css.filterBtn} ${filter === 'all' ? css.filterActive : ''}`}
             onClick={() => setFilter('all')}
           >
-            {t('allProviders')} ({providers.length})
+            {t('allProviders')} ({allProviders.length})
           </button>
           <button
             className={`${css.filterBtn} ${filter === 'configured' ? css.filterActive : ''}`}
@@ -114,17 +146,26 @@ export function UsageSection({ t }: UsageSectionProps): JSX.Element | null {
       </div>
 
       <div className={css.grid}>
-        {filtered.map(p => (
+        {filteredAll.map(p => (
           <ProviderCard
             key={p.id}
             provider={p}
             balance={balances[p.id]?.data ?? null}
             loading={balances[p.id]?.loading ?? false}
             onRefresh={() => void queryBalance(p.id)}
+            onRemove={p.id.startsWith('custom-') ? () => handleRemoveCustom(p.id) : undefined}
             t={t}
           />
         ))}
+        <button className={css.addCard} onClick={() => setShowAddDialog(true)}>
+          <span className={css.addIcon}>+</span>
+          <span className={css.addLabel}>{t('addCustomProvider')}</span>
+        </button>
       </div>
+
+      {showAddDialog && (
+        <AddProviderDialog t={t} onClose={() => setShowAddDialog(false)} onAdd={handleAddCustom} />
+      )}
     </div>
   )
 }

@@ -32,6 +32,7 @@ export interface ProviderCardProps extends PropsLocale<typeof NS> {
   balance: BalanceData | null
   loading: boolean
   onRefresh: () => void
+  onRemove?: () => void
 }
 
 function formatAmount(value: number | undefined, currency?: string): string {
@@ -68,7 +69,7 @@ function getStatusColor(percent: number | null): string {
   return 'var(--dsw-alias-state-error-primary)'
 }
 
-export function ProviderCard({ provider, balance, loading, onRefresh, t }: ProviderCardProps): JSX.Element {
+export function ProviderCard({ provider, balance, loading, onRefresh, onRemove, t }: ProviderCardProps): JSX.Element {
   const percent = getBalancePercent(balance?.balance)
   const statusColor = getStatusColor(percent)
 
@@ -164,11 +165,16 @@ export function ProviderCard({ provider, balance, loading, onRefresh, t }: Provi
         <a className={css.consoleLink} href={provider.consoleUrl} target="_blank" rel="noopener noreferrer">
           {t('goToConsole')} ↗
         </a>
-        {provider.configured && (
-          <button className={css.refreshBtn} onClick={onRefresh} disabled={loading}>
-            {loading ? '...' : t('refresh')}
-          </button>
-        )}
+        <div className={css.footerActions}>
+          {provider.configured && (
+            <button className={css.refreshBtn} onClick={onRefresh} disabled={loading}>
+              {loading ? '...' : t('refresh')}
+            </button>
+          )}
+          {onRemove && (
+            <button className={css.removeBtn} onClick={onRemove}>{t('remove')}</button>
+          )}
+        </div>
       </div>
     </div>
   )
