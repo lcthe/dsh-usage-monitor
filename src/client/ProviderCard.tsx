@@ -12,6 +12,7 @@ export interface ProviderInfo {
   consoleUrl: string
   apiKeyEnv: string
   limitType?: 'credit' | 'time' | 'usage'
+  displayMode?: 'currency-cny' | 'currency-usd' | 'token' | 'time-window' | 'usage-only' | null
 }
 
 export interface BalanceData {
@@ -35,15 +36,20 @@ export interface ProviderCardProps extends PropsLocale<typeof NS> {
   onRemove?: () => void
 }
 
-function formatAmount(value: number | undefined, currency?: string): string {
+function formatAmount(value: number | undefined, displayMode?: string | null): string {
   if (value === undefined || value === null) return '--'
+  if (displayMode === 'token') {
+    if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`
+    if (value >= 1000) return `${(value / 1000).toFixed(1)}k`
+    return String(Math.round(value))
+  }
   const formatted = value >= 1000
     ? `${(value / 1000).toFixed(1)}k`
     : value >= 1
       ? value.toFixed(2)
       : value.toFixed(4)
-  if (currency === 'CNY') return `¥${formatted}`
-  if (currency === 'USD') return `$${formatted}`
+  if (displayMode === 'currency-cny') return `¥${formatted}`
+  if (displayMode === 'currency-usd') return `$${formatted}`
   return formatted
 }
 
@@ -139,23 +145,31 @@ export function ProviderCard({ provider, balance, loading, onRefresh, onRemove, 
           </div>
         ) : balance?.balance ? (
           <div className={css.balanceInfo}>
-            {balance.balance.remaining !== undefined && (
-              <div className={css.mainBalance}>
-                <span className={css.balanceLabel}>{t('balance')}</span>
-                <span className={css.balanceValue}>{formatAmount(balance.balance.remaining, balance.balance.currency)}</span>
-              </div>
-            )}
-            {balance.balance.used !== undefined && percent !== null && (
-              <div className={css.progressRow}>
-                <div className={css.progressBar}>
-                  <div className={css.progressFill} style={{ width: `${percent}%`, backgroundColor: statusColor }} />
-                </div>
-              </div>
-            )}
-            {balance.balance.used !== undefined && (
-              <div className={css.detailRow}>
-                <span className={css.detailItem}>{t('used')}: {formatAmount(balance.balance.used, balance.balance.currency)}</span>
-              </div>
+            {provider.displayMode === 'usage-only' ? (
+              <>
+                {balance.balance.used !== undefined && (
+                  <div className={css.mainBalance}>
+                    <span className={css.balanceLabel}>{t('used')}</span>
+                    <span className={css.balanceValue}>{formatAmount(balance.balance.used, provider.displayMode)}</span>
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                {balance.balance.remaining !== undefined && (
+                  <div className={css.mainBalance}>
+                    <span className={css.balanceLabel}>{t('balance')}</span>
+                    <span className={css.balanceValue}>{formatAmount(balance.balance.remaining, provider.displayMode)}</span>
+                  </div>
+                )}
+                {balance.balance.used !== undefined && percent !== null && (
+                  <div className={css.progressRow}>
+                    <div className={css.progressBar}>
+                      <div className={css.progressFill} style={{ width: `${percent}%`, backgroundColor: statusColor }} />
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </div>
         ) : null}

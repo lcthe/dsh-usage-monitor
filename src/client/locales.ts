@@ -19,6 +19,7 @@ export const zh: LocaleDict = {
   'notSupported': '暂不支持自动查询',
   'goToConsole': '前往控制台',
   'balance': '余额',
+  'tokens': 'tokens',
   'total': '总额',
   'used': '已用',
   'remaining': '剩余',

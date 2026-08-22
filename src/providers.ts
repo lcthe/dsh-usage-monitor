@@ -32,6 +32,7 @@ export interface BalanceInfo {
 }
 
 export type LimitType = 'credit' | 'time' | 'usage'
+export type DisplayMode = 'currency-cny' | 'currency-usd' | 'token' | 'time-window' | 'usage-only'
 
 export interface ProviderConfig {
   /** Unique provider identifier (matches DSH provider IDs) */
@@ -66,6 +67,7 @@ export const PROVIDERS: ProviderConfig[] = [
   {
     id: 'deepseek',
     limitType: 'credit',
+    displayMode: 'currency-cny',
     name: 'DeepSeek',
     nameZh: 'DeepSeek',
     baseUrl: 'https://api.deepseek.com',
@@ -91,6 +93,7 @@ export const PROVIDERS: ProviderConfig[] = [
   {
     id: 'moonshotai',
     limitType: 'credit',
+    displayMode: 'currency-cny',
     name: 'Moonshot AI',
     nameZh: '月之暗面',
     baseUrl: 'https://api.moonshot.ai/v1',
@@ -117,6 +120,7 @@ export const PROVIDERS: ProviderConfig[] = [
   },
   {
     id: 'moonshotai-cn',
+    displayMode: 'currency-cny',
     name: 'Moonshot AI CN',
     nameZh: '月之暗面 (国内)',
     baseUrl: 'https://api.moonshot.cn/v1',
@@ -143,6 +147,7 @@ export const PROVIDERS: ProviderConfig[] = [
   },
   {
     id: 'openrouter',
+    displayMode: 'currency-usd',
     name: 'OpenRouter',
     nameZh: 'OpenRouter',
     baseUrl: 'https://openrouter.ai/api/v1',
@@ -162,6 +167,7 @@ export const PROVIDERS: ProviderConfig[] = [
   },
   {
     id: 'fireworks',
+    displayMode: 'usage-only',
     name: 'Fireworks AI',
     nameZh: 'Fireworks AI',
     baseUrl: 'https://api.fireworks.ai/inference',
@@ -308,6 +314,7 @@ export const PROVIDERS: ProviderConfig[] = [
   },
   {
     id: 'zai',
+    displayMode: 'token',
     name: 'Z.AI',
     nameZh: '智谱',
     baseUrl: 'https://api.z.ai/api/coding/paas/v4',
@@ -332,6 +339,7 @@ export const PROVIDERS: ProviderConfig[] = [
   },
   {
     id: 'zai-coding-cn',
+    displayMode: 'token',
     name: 'Z.AI Coding CN',
     nameZh: '智谱 (国内)',
     baseUrl: 'https://open.bigmodel.cn/api/coding/paas/v4',
@@ -381,6 +389,7 @@ export const PROVIDERS: ProviderConfig[] = [
   },
   {
     id: 'opencode-go',
+    displayMode: 'time-window',
     name: 'OpenCode Go',
     nameZh: 'OpenCode Go',
     baseUrl: 'https://opencode.ai/zen/go/v1',

@@ -19,9 +19,11 @@ interface ProviderBalance {
   id: string
   name: string
   nameZh: string
+  displayMode?: string | null
   balance?: {
     total?: number
     remaining?: number
+    used?: number
     currency?: string
     timeWindows?: { label: string; percent: number; resetsAt?: string }[]
   }
@@ -74,7 +76,7 @@ export function BalanceCapsule({ directory, useSession, t }: BalanceCapsuleProps
         })
         const balData = await balRes.json()
         if (balData.ok && balData.value.supported) {
-          list.push({ id: p.id, name: p.name, nameZh: p.nameZh, balance: balData.value.balance })
+          list.push({ id: p.id, name: p.name, nameZh: p.nameZh, displayMode: p.displayMode, balance: balData.value.balance })
         }
       }
       setProviders(list)
@@ -98,30 +100,41 @@ export function BalanceCapsule({ directory, useSession, t }: BalanceCapsuleProps
 
   if (matched.length === 0) return null
 
+  function formatCapsuleValue(p: ProviderBalance): string {
+    const dm = p.displayMode
+    if (dm === 'time-window' && p.balance?.timeWindows) {
+      return p.balance.timeWindows.map(w => {
+        const label = w.label === 'rolling' ? '5h' : w.label === 'weekly' ? '周' : '月'
+        return `${label} ${w.percent}%`
+      }).join('  ')
+    }
+    if (dm === 'usage-only') {
+      const used = p.balance?.used
+      if (used === undefined) return '--'
+      if (dm === 'currency-usd') return `$${used.toFixed(2)} used`
+      return `${used.toFixed(2)} used`
+    }
+    if (dm === 'token') {
+      const remaining = p.balance?.remaining
+      if (remaining === undefined) return '--'
+      if (remaining >= 1000000) return `${(remaining / 1000000).toFixed(1)}M tokens`
+      if (remaining >= 1000) return `${(remaining / 1000).toFixed(1)}k tokens`
+      return `${Math.round(remaining)} tokens`
+    }
+    const remaining = p.balance?.remaining
+    if (remaining === undefined) return '--'
+    if (dm === 'currency-cny') return `¥${remaining.toFixed(2)}`
+    if (dm === 'currency-usd') return `$${remaining.toFixed(2)}`
+    return String(remaining)
+  }
+
   return (
     <div className={css.capsule} onClick={() => void fetchBalances()}>
-      {matched.map(p => {
-        if (p.balance?.timeWindows) {
-          return p.balance.timeWindows.map(w => (
-            <span
-              key={`${p.id}-${w.label}`}
-              className={css.item}
-              title={`${p.nameZh} ${w.label}: ${w.percent}%`}
-            >
-              <span className={css.label}>{w.label === 'rolling' ? '5h' : w.label === 'weekly' ? '周' : '月'}</span>
-              <span className={css.value}>{w.percent}%</span>
-            </span>
-          ))
-        }
-        const remaining = p.balance?.remaining
-        const currency = p.balance?.currency
-        const symbol = currency === 'CNY' ? '¥' : currency === 'USD' ? '$' : ''
-        return (
-          <span key={p.id} className={css.item} title={`${p.nameZh}: ${symbol}${remaining ?? '--'}`}>
-            <span className={css.value}>{symbol}{remaining ?? '--'}</span>
-          </span>
-        )
-      })}
+      {matched.map(p => (
+        <span key={p.id} className={css.item} title={`${p.nameZh}`}>
+          <span className={css.value}>{formatCapsuleValue(p)}</span>
+        </span>
+      ))}
     </div>
   )
 }

@@ -11,10 +11,8 @@ A DSH plugin that adds a **Usage** page to the settings UI. It automatically rea
 ## ✨ Features
 
 - **Auto-detect configured providers** — reads API keys from DSH credentials, no manual input needed
-- **Balance query support** — DeepSeek, Moonshot/Kimi, OpenRouter, Fireworks AI, OpenCode Go
 - **Card-based UI** — DSH unified card style, responsive grid layout
-- **Credit balance** — shows remaining credit for pay-as-you-go providers
-- **Time-window progress** — subscription providers show 5h/weekly/monthly usage bars
+- **Multiple display modes** — currency (¥/$), token count, time-window progress bars
 - **Custom providers** — add your own providers with test connection
 - **Input capsule** — balance in composer toolbar, auto-refreshes on provider switch, message send, or click
 - **Console links** — one-click access to provider dashboards
@@ -51,22 +49,44 @@ pnpm dsh web
 
 After DSH starts, open **Settings → Usage** to view your provider balances.
 
-## 🔑 Supported Providers
+## 🔑 Provider Support
 
-### With Balance API
+> **已稳定测试：** DeepSeek、OpenCode Go。其他供应商的余额查询接口未经完整测试，欢迎反馈。
 
-| Provider | Endpoint | Type | Notes |
-|---|---|---|---|
-| DeepSeek | `GET /user/balance` | credit | CNY/USD |
-| Moonshot AI / Kimi | `GET /v1/users/me/balance` | credit | CNY |
-| OpenRouter | `GET /api/v1/credits` | credit | Requires Management API Key |
-| Fireworks AI | `GET /v1/accounts/-/billingUsage` | credit | USD |
-| OpenCode Go | `GET /v1/usage` | time | 5h/weekly/monthly limits with ring progress |
-| Z.AI | `GET /user/rights` | credit | CNY |
+### 余额查询支持
 
-### Without Balance API (shows console link)
+| 供应商 | 余额接口 | 计费模式 | 显示方式 | 控制台 | 状态 |
+|---|---|---|---|---|---|
+| DeepSeek | `GET /user/balance` | 按量付费 | ¥ 余额 | [platform.deepseek.com](https://platform.deepseek.com) | ✅ 已验证 |
+| OpenCode Go | `GET /v1/usage` | 订阅制 | 5h/周/月 进度条 | [opencode.ai/workspace/go](https://opencode.ai/workspace/go) | ✅ 已验证 |
+| Moonshot AI | `GET /v1/users/me/balance` | 按量付费 | ¥ 余额 | [platform.moonshot.cn](https://platform.moonshot.cn) | ⚠️ 未测试 |
+| Moonshot AI CN | `GET /v1/users/me/balance` | 按量付费 | ¥ 余额 | [platform.moonshot.cn](https://platform.moonshot.cn) | ⚠️ 未测试 |
+| OpenRouter | `GET /api/v1/credits` | 按量付费 | $ 余额 | [openrouter.ai](https://openrouter.ai) | ⚠️ 需 Management Key |
+| Fireworks AI | `GET /v1/accounts/-/billingUsage` | 后付费 | $ 已用费用 | [fireworks.ai](https://fireworks.ai) | ⚠️ 未测试 |
+| Z.AI（智谱） | `GET /user/rights` | 按量付费 | token 余量 | [open.bigmodel.cn](https://open.bigmodel.cn) | ⚠️ 未测试 |
+| Z.AI CN | `GET /user/rights` | 按量付费 | token 余量 | [open.bigmodel.cn](https://open.bigmodel.cn) | ⚠️ 未测试 |
 
-OpenAI, Anthropic, Google Gemini, Groq, Mistral, xAI, Together AI, Cerebras, NVIDIA, Hugging Face, Qwen, Xiaomi, Kimi For Coding, Ant Ling
+### 不支持余额查询
+
+以下供应商暂无公开的余额查询 API，显示控制台链接供手动查看：
+
+| 供应商 | 控制台 |
+|---|---|
+| OpenAI | [platform.openai.com](https://platform.openai.com) |
+| Anthropic | [console.anthropic.com](https://console.anthropic.com) |
+| Google Gemini | [aistudio.google.com](https://aistudio.google.com) |
+| Groq | [console.groq.com](https://console.groq.com) |
+| Mistral | [console.mistral.ai](https://console.mistral.ai) |
+| xAI | [console.x.ai](https://console.x.ai) |
+| Together AI | [api.together.ai](https://api.together.ai) |
+| Cerebras | [cloud.cerebras.ai](https://cloud.cerebras.ai) |
+| NVIDIA | [build.nvidia.com](https://build.nvidia.com) |
+| Hugging Face | [huggingface.co](https://huggingface.co) |
+| Qwen（通义千问） | [dashscope.console.aliyun.com](https://dashscope.console.aliyun.com) |
+| Xiaomi（小米） | [platform.xiaomimimo.com](https://platform.xiaomimimo.com/console/plan-manage) |
+| Kimi For Coding | [kimi.moonshot.cn](https://kimi.moonshot.cn) |
+| Ant Ling（蚂蚁灵） | [ant-ling.com](https://ant-ling.com) |
+| OpenCode Zen | [opencode.ai/workspace](https://opencode.ai/workspace) |
 
 ## 🤝 Contributing
 

@@ -98,6 +98,7 @@ export function apply(ctx: Context): void {
               consoleUrl: p.consoleUrl,
               apiKeyEnv: p.apiKeyEnv,
               limitType: p.limitType,
+              displayMode: p.displayMode ?? null,
             }
           }))
           ok(res, all.filter(p => p.configured))
