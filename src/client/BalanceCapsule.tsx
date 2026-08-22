@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useSyncExternalStore } from 'react'
+import { useState, useEffect, useCallback, useSyncExternalStore, useRef } from 'react'
 import type { PropsLocale } from '@deepseek-ai/dsh-client-ui-slots'
 import type { NS } from './locales.ts'
 import css from './balance-capsule.module.css'
@@ -41,12 +41,16 @@ function mapProvider(providerId: string): string | null {
   return null
 }
 
-export function BalanceCapsule({ directory, t }: BalanceCapsuleProps): JSX.Element | null {
+export function BalanceCapsule({ directory, useSession, t }: BalanceCapsuleProps): JSX.Element | null {
   const [providers, setProviders] = useState<ProviderBalance[]>([])
   const modelState = useSyncExternalStore(
     (fn) => directory.subscribe(fn),
     () => directory.getSnapshot(),
   )
+  const nodeCount = useSession((s: { chat: { order: number[] } }) => s.chat.order.length)
+  const prevProviderRef = useRef<string | null>(null)
+  const prevNodeCountRef = useRef<number>(0)
+  const visibleRef = useRef(true)
 
   const currentProvider = modelState?.current?.provider
   const mappedProvider = currentProvider ? mapProvider(currentProvider) : null
@@ -77,11 +81,37 @@ export function BalanceCapsule({ directory, t }: BalanceCapsuleProps): JSX.Eleme
     } catch { /* ignore */ }
   }, [])
 
+  // Initial load
+  useEffect(() => { void fetchBalances() }, [fetchBalances])
+
+  // Refresh on model switch
   useEffect(() => {
-    void fetchBalances()
-    const timer = setInterval(() => void fetchBalances(), 60000)
-    return () => clearInterval(timer)
-  }, [fetchBalances])
+    if (mappedProvider && mappedProvider !== prevProviderRef.current) {
+      prevProviderRef.current = mappedProvider
+      void fetchBalances()
+    }
+  }, [mappedProvider, fetchBalances])
+
+  // Refresh on message sent
+  useEffect(() => {
+    if (nodeCount !== prevNodeCountRef.current) {
+      prevNodeCountRef.current = nodeCount
+      if (mappedProvider) void fetchBalances()
+    }
+  }, [nodeCount, mappedProvider, fetchBalances])
+
+  // Pause interval when page hidden
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (visibleRef.current && mappedProvider) void fetchBalances()
+    }, 60000)
+    const onVisibility = () => { visibleRef.current = !document.hidden }
+    document.addEventListener('visibilitychange', onVisibility)
+    return () => {
+      clearInterval(timer)
+      document.removeEventListener('visibilitychange', onVisibility)
+    }
+  }, [fetchBalances, mappedProvider])
 
   if (providers.length === 0) return null
 
