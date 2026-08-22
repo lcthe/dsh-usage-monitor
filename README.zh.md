@@ -62,10 +62,11 @@ DSH 启动后，打开**设置 → 用量**即可查看各供应商余额。
 | OpenRouter | `GET /api/v1/credits` | 额度 | 需要 Management API Key |
 | Fireworks AI | `GET /v1/accounts/-/billingUsage` | 额度 | USD |
 | OpenCode Go | `GET /v1/usage` | 时间限制 | 5小时/周/月限制，环形进度显示 |
+| Z.AI（智谱） | `GET /user/rights` | 额度 | CNY |
 
 ### 不支持余额查询（显示控制台链接）
 
-OpenAI、Anthropic、Google Gemini、Groq、Mistral、xAI、Together AI、Cerebras、NVIDIA、Hugging Face、Qwen（通义千问）、Xiaomi（小米）、Z.AI（智谱）、Kimi For Coding、Ant Ling（蚂蚁灵）
+OpenAI、Anthropic、Google Gemini、Groq、Mistral、xAI、Together AI、Cerebras、NVIDIA、Hugging Face、Qwen（通义千问）、Xiaomi（小米）、Kimi For Coding、Ant Ling（蚂蚁灵）
 
 ## 🤝 贡献
 

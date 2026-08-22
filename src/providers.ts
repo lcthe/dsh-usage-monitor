@@ -313,6 +313,22 @@ export const PROVIDERS: ProviderConfig[] = [
     baseUrl: 'https://api.z.ai/api/coding/paas/v4',
     apiKeyEnv: 'ZAI_API_KEY',
     consoleUrl: 'https://open.bigmodel.cn',
+    limitType: 'credit',
+    balanceApi: {
+      url: 'https://open.bigmodel.cn/api/paas/v4/user/rights',
+      method: 'GET',
+      parse: (data: unknown) => {
+        const d = data as { data?: { remaining?: number; total?: number; unit?: string } }
+        const remaining = d.data?.remaining
+        const total = d.data?.total
+        return {
+          total: total !== undefined ? total / 1000 : undefined,
+          remaining: remaining !== undefined ? remaining / 1000 : undefined,
+          currency: 'CNY',
+          raw: data,
+        }
+      },
+    },
   },
   {
     id: 'zai-coding-cn',
@@ -321,6 +337,22 @@ export const PROVIDERS: ProviderConfig[] = [
     baseUrl: 'https://open.bigmodel.cn/api/coding/paas/v4',
     apiKeyEnv: 'ZAI_CODING_CN_API_KEY',
     consoleUrl: 'https://open.bigmodel.cn',
+    limitType: 'credit',
+    balanceApi: {
+      url: 'https://open.bigmodel.cn/api/paas/v4/user/rights',
+      method: 'GET',
+      parse: (data: unknown) => {
+        const d = data as { data?: { remaining?: number; total?: number; unit?: string } }
+        const remaining = d.data?.remaining
+        const total = d.data?.total
+        return {
+          total: total !== undefined ? total / 1000 : undefined,
+          remaining: remaining !== undefined ? remaining / 1000 : undefined,
+          currency: 'CNY',
+          raw: data,
+        }
+      },
+    },
   },
   {
     id: 'kimi-coding',

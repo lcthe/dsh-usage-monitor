@@ -62,10 +62,11 @@ After DSH starts, open **Settings → Usage** to view your provider balances.
 | OpenRouter | `GET /api/v1/credits` | credit | Requires Management API Key |
 | Fireworks AI | `GET /v1/accounts/-/billingUsage` | credit | USD |
 | OpenCode Go | `GET /v1/usage` | time | 5h/weekly/monthly limits with ring progress |
+| Z.AI | `GET /user/rights` | credit | CNY |
 
 ### Without Balance API (shows console link)
 
-OpenAI, Anthropic, Google Gemini, Groq, Mistral, xAI, Together AI, Cerebras, NVIDIA, Hugging Face, Qwen, Xiaomi, Z.AI, Kimi For Coding, Ant Ling
+OpenAI, Anthropic, Google Gemini, Groq, Mistral, xAI, Together AI, Cerebras, NVIDIA, Hugging Face, Qwen, Xiaomi, Kimi For Coding, Ant Ling
 
 ## 🤝 Contributing
 
