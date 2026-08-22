@@ -16,7 +16,7 @@ A DSH plugin that adds a **Usage** page to the settings UI. It automatically rea
 - **Credit balance** — shows remaining credit for pay-as-you-go providers
 - **Time-window progress** — subscription providers show 5h/weekly/monthly usage bars
 - **Custom providers** — add your own providers with test connection
-- **Input capsule** — balance display in the composer toolbar, auto-updates when switching providers
+- **Input capsule** — balance in composer toolbar, auto-refreshes on provider switch, message send, or click
 - **Console links** — one-click access to provider dashboards
 - **Filtering** — filter by All / Configured / Balance Supported
 - **i18n** — Chinese and English

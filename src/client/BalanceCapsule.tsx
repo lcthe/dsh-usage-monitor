@@ -44,12 +44,13 @@ function mapProvider(providerId: string): string | null {
   return null
 }
 
-export function BalanceCapsule({ directory, t }: BalanceCapsuleProps): JSX.Element | null {
+export function BalanceCapsule({ directory, useSession, t }: BalanceCapsuleProps): JSX.Element | null {
   const [providers, setProviders] = useState<ProviderBalance[]>([])
   const modelState = useSyncExternalStore(
     (fn) => directory.subscribe(fn),
     () => directory.getSnapshot(),
   )
+  const nodeCount = useSession((s: { chat: { order: number[] } }) => s.chat.order.length)
 
   const currentProvider = modelState?.current?.provider
   const mappedProvider = currentProvider ? mapProvider(currentProvider) : null
@@ -80,7 +81,16 @@ export function BalanceCapsule({ directory, t }: BalanceCapsuleProps): JSX.Eleme
     } catch { /* ignore */ }
   }, [])
 
-  useEffect(() => { void fetchBalances() }, [fetchBalances])
+  useEffect(() => {
+    void fetchBalances()
+    const timer = setInterval(() => void fetchBalances(), 60000)
+    return () => clearInterval(timer)
+  }, [fetchBalances])
+
+  // Refresh when provider changes or new message sent
+  useEffect(() => {
+    if (mappedProvider) void fetchBalances()
+  }, [mappedProvider, fetchBalances, nodeCount])
 
   const matched = mappedProvider
     ? providers.filter(p => p.id === mappedProvider)
@@ -89,7 +99,7 @@ export function BalanceCapsule({ directory, t }: BalanceCapsuleProps): JSX.Eleme
   if (matched.length === 0) return null
 
   return (
-    <div className={css.capsule}>
+    <div className={css.capsule} onClick={() => void fetchBalances()}>
       {matched.map(p => {
         if (p.balance?.timeWindows) {
           return p.balance.timeWindows.map(w => (
