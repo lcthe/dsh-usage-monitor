@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import type {} from '@deepseek-ai/dsh-client-ui-settings/client'
 import type { PropsRuntime, PropsLocale } from '@deepseek-ai/dsh-client-ui-slots'
 import { NS } from './locales.ts'
 import { usageRpc } from './index.ts'

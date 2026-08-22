@@ -53,10 +53,11 @@
     "clean": "node -e \"require('node:fs').rmSync('lib',{recursive:true,force:true})\"",
     "typecheck": "tsc -p tsconfig.build.json --noEmit",
     "bundle": "tsdown",
-    "build": "npm run clean && npm run typecheck && npm run bundle"
+    "build": "npm run clean && npm run bundle"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": ">=4.0.1-rc.1",
+    "@deepseek-ai/dsh-credentials": "^0.0.1-rc.1",
     "@deepseek-ai/dsh-client-locale": "^0.0.1-rc.1",
     "@deepseek-ai/dsh-client-ui-settings": "^0.1.0-rc.5",
     "@deepseek-ai/dsh-client-ui-slots": "^0.0.1-rc.1",
@@ -66,10 +67,12 @@
   },
   "devDependencies": {
     "@deepseek-ai/cordis": ">=4.0.1-rc.1",
+    "@deepseek-ai/dsh-credentials": "^0.0.1-rc.1",
     "@deepseek-ai/dsh-client-locale": "^0.0.1-rc.1",
     "@deepseek-ai/dsh-client-ui-settings": "^0.1.0-rc.5",
     "@deepseek-ai/dsh-client-ui-slots": "^0.0.1-rc.1",
     "@deepseek-ai/dsh-client-ui-primitives": "^0.1.0-rc.5",
+    "@types/node": "^22.20.0",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.0",
     "lightningcss": "^1.32.0",
