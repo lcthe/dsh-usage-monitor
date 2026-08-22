@@ -50,7 +50,6 @@ export function BalanceCapsule({ directory, useSession, t }: BalanceCapsuleProps
   const nodeCount = useSession((s: { chat: { order: number[] } }) => s.chat.order.length)
   const prevProviderRef = useRef<string | null>(null)
   const prevNodeCountRef = useRef<number>(0)
-  const visibleRef = useRef(true)
 
   const currentProvider = modelState?.current?.provider
   const mappedProvider = currentProvider ? mapProvider(currentProvider) : null
@@ -100,18 +99,6 @@ export function BalanceCapsule({ directory, useSession, t }: BalanceCapsuleProps
     }
   }, [nodeCount, mappedProvider, fetchBalances])
 
-  // Pause interval when page hidden
-  useEffect(() => {
-    const timer = setInterval(() => {
-      if (visibleRef.current && mappedProvider) void fetchBalances()
-    }, 60000)
-    const onVisibility = () => { visibleRef.current = !document.hidden }
-    document.addEventListener('visibilitychange', onVisibility)
-    return () => {
-      clearInterval(timer)
-      document.removeEventListener('visibilitychange', onVisibility)
-    }
-  }, [fetchBalances, mappedProvider])
 
   if (providers.length === 0) return null
 

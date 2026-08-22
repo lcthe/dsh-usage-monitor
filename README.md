@@ -14,7 +14,7 @@ A DSH plugin that adds a **Usage** page to the settings UI. It automatically rea
 - **Card-based UI** — DSH unified card style, responsive grid layout
 - **Multiple display modes** — currency (¥/$), token count, time-window progress bars
 - **Custom providers** — add your own providers with test connection
-- **Input capsule** — balance in composer toolbar, auto-refreshes on provider switch, message send, or click
+- **Input capsule** — balance in composer toolbar, refreshes on provider switch, message send, or click
 - **Console links** — one-click access to provider dashboards
 - **Filtering** — filter by All / Configured / Balance Supported
 - **i18n** — Chinese and English
