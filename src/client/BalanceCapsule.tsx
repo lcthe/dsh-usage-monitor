@@ -8,12 +8,7 @@ interface DirectoryStore {
   getSnapshot: () => { current?: { provider: string; model: string } | null }
 }
 
-interface Injected {
-  directory: DirectoryStore
-  available: boolean
-}
-
-type BalanceCapsuleProps = Injected & PropsLocale<typeof NS>
+type BalanceCapsuleProps = { directory: DirectoryStore } & PropsLocale<typeof NS>
 
 interface ProviderBalance {
   id: string
@@ -46,13 +41,12 @@ function mapProvider(providerId: string): string | null {
   return null
 }
 
-export function BalanceCapsule({ directory, useSession, t }: BalanceCapsuleProps): JSX.Element | null {
+export function BalanceCapsule({ directory, t }: BalanceCapsuleProps): JSX.Element | null {
   const [providers, setProviders] = useState<ProviderBalance[]>([])
   const modelState = useSyncExternalStore(
     (fn) => directory.subscribe(fn),
     () => directory.getSnapshot(),
   )
-  const nodeCount = useSession((s: { chat: { order: number[] } }) => s.chat.order.length)
 
   const currentProvider = modelState?.current?.provider
   const mappedProvider = currentProvider ? mapProvider(currentProvider) : null
@@ -89,16 +83,7 @@ export function BalanceCapsule({ directory, useSession, t }: BalanceCapsuleProps
     return () => clearInterval(timer)
   }, [fetchBalances])
 
-  // Refresh when provider changes or new message sent
-  useEffect(() => {
-    if (mappedProvider) void fetchBalances()
-  }, [mappedProvider, fetchBalances, nodeCount])
-
-  const matched = mappedProvider
-    ? providers.filter(p => p.id === mappedProvider)
-    : []
-
-  if (matched.length === 0) return null
+  if (providers.length === 0) return null
 
   function formatCapsuleValue(p: ProviderBalance): string {
     const dm = p.displayMode
@@ -111,8 +96,7 @@ export function BalanceCapsule({ directory, useSession, t }: BalanceCapsuleProps
     if (dm === 'usage-only') {
       const used = p.balance?.used
       if (used === undefined) return '--'
-      if (dm === 'currency-usd') return `$${used.toFixed(2)} used`
-      return `${used.toFixed(2)} used`
+      return `$${used.toFixed(2)} used`
     }
     if (dm === 'token') {
       const remaining = p.balance?.remaining
@@ -127,6 +111,12 @@ export function BalanceCapsule({ directory, useSession, t }: BalanceCapsuleProps
     if (dm === 'currency-usd') return `$${remaining.toFixed(2)}`
     return String(remaining)
   }
+
+  const matched = mappedProvider
+    ? providers.filter(p => p.id === mappedProvider)
+    : []
+
+  if (matched.length === 0) return null
 
   return (
     <div className={css.capsule} onClick={() => void fetchBalances()}>
