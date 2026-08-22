@@ -5,6 +5,9 @@ declare module '@deepseek-ai/cordis' {
   interface Context {
     effect<T>(effect: () => T, name?: string): T
     credentials: CredentialProvider
+    sessions: {
+      get(id: string): unknown
+    }
     webServer: {
       register(route: {
         kind: 'prefix' | 'exact'

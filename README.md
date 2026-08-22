@@ -11,10 +11,13 @@ A DSH plugin that adds a **Usage** page to the settings UI. It automatically rea
 ## ✨ Features
 
 - **Auto-detect configured providers** — reads API keys from DSH credentials, no manual input needed
-- **Balance query support** — DeepSeek, Moonshot/Kimi, OpenRouter, Fireworks AI
-- **Card-based UI** — responsive grid layout with balance visualization
-- **Progress bar** — color-coded (green/yellow/red) based on remaining balance
-- **Console links** — one-click access to provider dashboards for unsupported providers
+- **Balance query support** — DeepSeek, Moonshot/Kimi, OpenRouter, Fireworks AI, OpenCode Go
+- **Card-based UI** — DSH unified card style, responsive grid layout
+- **Credit balance** — shows remaining credit for pay-as-you-go providers
+- **Time-window progress** — subscription providers show 5h/weekly/monthly usage bars
+- **Custom providers** — add your own providers with test connection
+- **Input capsule** — balance display in the composer toolbar, auto-updates when switching providers
+- **Console links** — one-click access to provider dashboards
 - **Filtering** — filter by All / Configured / Balance Supported
 - **i18n** — Chinese and English
 

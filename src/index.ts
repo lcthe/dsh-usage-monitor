@@ -7,7 +7,7 @@ import type { Context } from '@deepseek-ai/cordis'
 import { credentialRef } from '@deepseek-ai/dsh-credentials'
 import { PROVIDERS, type BalanceInfo, type ProviderConfig } from './providers.ts'
 
-export const inject = ['credentials', 'webServer']
+export const inject = ['credentials', 'webServer', 'sessions']
 
 const API_BASE = '/dsh-usage-monitor-api'
 
@@ -101,6 +101,50 @@ export function apply(ctx: Context): void {
             }
           }))
           ok(res, all.filter(p => p.configured))
+          return
+        }
+
+        if (req.method === 'POST' && endpoint === 'current-model') {
+          const body = await readBody(req) as { sessionId?: string }
+          if (!body.sessionId) {
+            fail(res, 400, 'Missing sessionId')
+            return
+          }
+          try {
+            const session = ctx.sessions.get(body.sessionId)
+            if (!session) {
+              ok(res, { provider: null, model: null })
+              return
+            }
+            // Walk session events backwards to find the last model used
+            const events = (session as { events?: Array<Record<string, unknown>> }).events
+            if (Array.isArray(events)) {
+              for (let i = events.length - 1; i >= 0; i--) {
+                const ev = events[i]
+                // assistant/message events have source.provider and source.model
+                if (ev['type'] === 'assistant/message') {
+                  const source = ev['source'] as Record<string, unknown> | undefined
+                  if (source && typeof source['provider'] === 'string' && typeof source['model'] === 'string') {
+                    ok(res, { provider: source['provider'], model: source['model'] })
+                    return
+                  }
+                }
+                // turn/start or request events may have config with provider/model
+                if (ev['type'] === 'turn/start' || ev['type'] === 'request') {
+                  const data = ev['data'] as Record<string, unknown> | undefined
+                  const config = data?.['config'] as Record<string, unknown> | undefined
+                  if (config && typeof config['provider'] === 'string' && typeof config['model'] === 'string') {
+                    ok(res, { provider: config['provider'], model: config['model'] })
+                    return
+                  }
+                }
+              }
+            }
+            ok(res, { provider: null, model: null })
+          } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : String(err)
+            ok(res, { provider: null, model: null, error: message })
+          }
           return
         }
 
