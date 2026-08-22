@@ -280,7 +280,7 @@ export const PROVIDERS: ProviderConfig[] = [
     nameZh: '小米',
     baseUrl: 'https://api.xiaomimimo.com/v1',
     apiKeyEnv: 'XIAOMI_API_KEY',
-    consoleUrl: 'https://dev.mi.com',
+    consoleUrl: 'https://platform.xiaomimimo.com/console/plan-manage',
   },
   {
     id: 'xiaomi-token-plan-ams',
@@ -288,7 +288,7 @@ export const PROVIDERS: ProviderConfig[] = [
     nameZh: '小米 Token Plan (新加坡)',
     baseUrl: 'https://token-plan-ams.xiaomimimo.com/v1',
     apiKeyEnv: 'XIAOMI_TOKEN_PLAN_AMS_API_KEY',
-    consoleUrl: 'https://dev.mi.com',
+    consoleUrl: 'https://platform.xiaomimimo.com/console/plan-manage',
   },
   {
     id: 'xiaomi-token-plan-cn',
@@ -296,7 +296,7 @@ export const PROVIDERS: ProviderConfig[] = [
     nameZh: '小米 Token Plan (国内)',
     baseUrl: 'https://token-plan-cn.xiaomimimo.com/v1',
     apiKeyEnv: 'XIAOMI_TOKEN_PLAN_CN_API_KEY',
-    consoleUrl: 'https://dev.mi.com',
+    consoleUrl: 'https://platform.xiaomimimo.com/console/plan-manage',
   },
   {
     id: 'xiaomi-token-plan-sgp',
@@ -304,7 +304,7 @@ export const PROVIDERS: ProviderConfig[] = [
     nameZh: '小米 Token Plan (新加坡)',
     baseUrl: 'https://token-plan-sgp.xiaomimimo.com/v1',
     apiKeyEnv: 'XIAOMI_TOKEN_PLAN_SGP_API_KEY',
-    consoleUrl: 'https://dev.mi.com',
+    consoleUrl: 'https://platform.xiaomimimo.com/console/plan-manage',
   },
   {
     id: 'zai',
