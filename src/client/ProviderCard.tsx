@@ -47,18 +47,12 @@ function formatAmount(value: number | undefined, currency?: string): string {
 }
 
 function formatResetTime(iso: string): string {
-  const date = new Date(iso)
-  const now = new Date()
-  const diffMs = date.getTime() - now.getTime()
-  if (diffMs <= 0) return 'soon'
-  const diffH = Math.floor(diffMs / 3600000)
-  const diffM = Math.floor((diffMs % 3600000) / 60000)
-  if (diffH >= 24) {
-    const diffD = Math.floor(diffH / 24)
-    return `${diffD}d ${diffH % 24}h`
-  }
-  if (diffH > 0) return `${diffH}h ${diffM}m`
-  return `${diffM}m`
+  const d = new Date(iso)
+  const month = d.getMonth() + 1
+  const day = d.getDate()
+  const h = String(d.getHours()).padStart(2, '0')
+  const m = String(d.getMinutes()).padStart(2, '0')
+  return `${month}/${day} ${h}:${m}`
 }
 
 function getBalancePercent(balance: BalanceData['balance']): number | null {
@@ -68,10 +62,10 @@ function getBalancePercent(balance: BalanceData['balance']): number | null {
 }
 
 function getStatusColor(percent: number | null): string {
-  if (percent === null) return 'var(--dsw-alias-color-success)'
-  if (percent > 50) return 'var(--dsw-alias-color-success)'
-  if (percent > 20) return 'var(--dsw-alias-color-warning)'
-  return 'var(--dsw-alias-color-error)'
+  if (percent === null) return 'var(--dsw-alias-state-success-primary)'
+  if (percent > 50) return 'var(--dsw-alias-state-success-primary)'
+  if (percent > 20) return 'var(--dsw-alias-state-warn-primary)'
+  return 'var(--dsw-alias-state-error-primary)'
 }
 
 export function ProviderCard({ provider, balance, loading, onRefresh, t }: ProviderCardProps): JSX.Element {
@@ -85,7 +79,7 @@ export function ProviderCard({ provider, balance, loading, onRefresh, t }: Provi
           <h3 className={css.name}>{provider.nameZh || provider.name}</h3>
           <span
             className={css.dot}
-            style={{ backgroundColor: provider.configured ? statusColor : 'var(--dsw-alias-color-text-tertiary)' }}
+            style={{ backgroundColor: provider.configured ? statusColor : 'var(--dsw-alias-label-dimmed)' }}
           />
         </div>
         <span className={css.subtitle}>{provider.name}</span>
@@ -107,35 +101,23 @@ export function ProviderCard({ provider, balance, loading, onRefresh, t }: Provi
             {balance.balance.timeWindows.map((w) => {
               const isExceeded = w.status !== 'ok'
               const color = isExceeded
-                ? 'var(--dsw-alias-color-error)'
+                ? 'var(--dsw-alias-state-error-primary)'
                 : w.percent > 80
-                  ? 'var(--dsw-alias-color-warning)'
-                  : 'var(--dsw-alias-color-success)'
-              const radius = 16
-              const circumference = 2 * Math.PI * radius
-              const offset = circumference - (Math.min(100, w.percent) / 100) * circumference
+                  ? 'var(--dsw-alias-state-warn-primary)'
+                  : 'var(--dsw-alias-state-success-primary)'
               return (
                 <div key={w.label} className={css.timeWindow}>
-                  <div className={css.ringWrap}>
-                    <svg className={css.ring} viewBox="0 0 36 36">
-                      <circle className={css.ringBg} cx="18" cy="18" r={radius} />
-                      <circle
-                        className={css.ringFill}
-                        cx="18" cy="18" r={radius}
-                        stroke={color}
-                        strokeDasharray={circumference}
-                        strokeDashoffset={offset}
-                      />
-                    </svg>
-                    <span className={css.ringPercent} style={{ color }}>
-                      {isExceeded ? '!' : `${w.percent}`}
+                  <div className={css.twHeader}>
+                    <span className={css.twLabel}>
+                      {t(w.label) || w.label}
+                      {w.resetsAt && <span className={css.twReset}> ({formatResetTime(w.resetsAt)} 重置)</span>}
+                    </span>
+                    <span className={css.twPercent} style={{ color }}>
+                      {isExceeded ? t('exceeded') : `${w.percent}%`}
                     </span>
                   </div>
-                  <div className={css.timeWindowInfo}>
-                    <span className={css.timeWindowLabel}>{t(w.label) || w.label}</span>
-                    {w.resetsAt && (
-                      <span className={css.resetsAt}>{formatResetTime(w.resetsAt)}</span>
-                    )}
+                  <div className={css.twBar}>
+                    <div className={css.twBarFill} style={{ width: `${Math.min(100, w.percent)}%`, backgroundColor: color }} />
                   </div>
                 </div>
               )
@@ -158,25 +140,22 @@ export function ProviderCard({ provider, balance, loading, onRefresh, t }: Provi
           <div className={css.balanceInfo}>
             {balance.balance.remaining !== undefined && (
               <div className={css.mainBalance}>
-                <span className={css.balanceLabel}>{t('remaining')}</span>
+                <span className={css.balanceLabel}>{t('balance')}</span>
                 <span className={css.balanceValue}>{formatAmount(balance.balance.remaining, balance.balance.currency)}</span>
               </div>
             )}
-            {balance.balance.total !== undefined && balance.balance.total > 0 && (
+            {balance.balance.used !== undefined && percent !== null && (
               <div className={css.progressRow}>
                 <div className={css.progressBar}>
-                  <div className={css.progressFill} style={{ width: `${percent ?? 100}%`, backgroundColor: statusColor }} />
+                  <div className={css.progressFill} style={{ width: `${percent}%`, backgroundColor: statusColor }} />
                 </div>
               </div>
             )}
-            <div className={css.detailRow}>
-              {balance.balance.total !== undefined && (
-                <span className={css.detailItem}>{t('total')}: {formatAmount(balance.balance.total, balance.balance.currency)}</span>
-              )}
-              {balance.balance.used !== undefined && (
+            {balance.balance.used !== undefined && (
+              <div className={css.detailRow}>
                 <span className={css.detailItem}>{t('used')}: {formatAmount(balance.balance.used, balance.balance.currency)}</span>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         ) : null}
       </div>

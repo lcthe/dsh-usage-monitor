@@ -344,7 +344,7 @@ export const PROVIDERS: ProviderConfig[] = [
     nameZh: 'OpenCode Zen',
     baseUrl: 'https://opencode.ai/zen/v1',
     apiKeyEnv: 'OPENCODE_API_KEY',
-    consoleUrl: 'https://opencode.ai/console',
+    consoleUrl: 'https://opencode.ai/workspace',
     limitType: 'credit',
   },
   {
@@ -353,7 +353,7 @@ export const PROVIDERS: ProviderConfig[] = [
     nameZh: 'OpenCode Go',
     baseUrl: 'https://opencode.ai/zen/go/v1',
     apiKeyEnv: 'OPENCODE_GO_API_KEY',
-    consoleUrl: 'https://opencode.ai/console',
+    consoleUrl: 'https://opencode.ai/workspace/go',
     limitType: 'time',
     balanceApi: {
       url: 'https://opencode.ai/zen/go/v1/usage',
