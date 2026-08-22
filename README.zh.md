@@ -52,12 +52,13 @@ DSH 启动后，打开**设置 → 用量**即可查看各供应商余额。
 
 ### 支持余额查询
 
-| 供应商 | API 端点 | 说明 |
-|---|---|---|
-| DeepSeek | `GET /user/balance` | 支持 CNY/USD |
-| Moonshot AI / Kimi | `GET /v1/users/me/balance` | CNY |
-| OpenRouter | `GET /api/v1/credits` | 需要 Management API Key |
-| Fireworks AI | `GET /v1/accounts/-/billingUsage` | USD |
+| 供应商 | API 端点 | 类型 | 说明 |
+|---|---|---|---|
+| DeepSeek | `GET /user/balance` | 额度 | 支持 CNY/USD |
+| Moonshot AI / Kimi | `GET /v1/users/me/balance` | 额度 | CNY |
+| OpenRouter | `GET /api/v1/credits` | 额度 | 需要 Management API Key |
+| Fireworks AI | `GET /v1/accounts/-/billingUsage` | 额度 | USD |
+| OpenCode Go | `GET /v1/usage` | 时间限制 | 5小时/周/月限制，环形进度显示 |
 
 ### 不支持余额查询（显示控制台链接）
 

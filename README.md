@@ -52,12 +52,13 @@ After DSH starts, open **Settings → Usage** to view your provider balances.
 
 ### With Balance API
 
-| Provider | Endpoint | Notes |
-|---|---|---|
-| DeepSeek | `GET /user/balance` | CNY/USD |
-| Moonshot AI / Kimi | `GET /v1/users/me/balance` | CNY |
-| OpenRouter | `GET /api/v1/credits` | Requires Management API Key |
-| Fireworks AI | `GET /v1/accounts/-/billingUsage` | USD |
+| Provider | Endpoint | Type | Notes |
+|---|---|---|---|
+| DeepSeek | `GET /user/balance` | credit | CNY/USD |
+| Moonshot AI / Kimi | `GET /v1/users/me/balance` | credit | CNY |
+| OpenRouter | `GET /api/v1/credits` | credit | Requires Management API Key |
+| Fireworks AI | `GET /v1/accounts/-/billingUsage` | credit | USD |
+| OpenCode Go | `GET /v1/usage` | time | 5h/weekly/monthly limits with ring progress |
 
 ### Without Balance API (shows console link)
 

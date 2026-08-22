@@ -15,18 +15,19 @@
 
 ## 支持余额查询的供应商
 
-| 供应商 | 余额 API | 说明 |
-|---|---|---|
-| DeepSeek | `GET /user/balance` | 返回总额、可用余额，支持 CNY/USD |
-| Moonshot AI / Kimi | `GET /v1/users/me/balance` | 返回可用余额、代金券余额、现金余额 |
-| OpenRouter | `GET /api/v1/credits` | 需 Management API Key（非推理 Key） |
-| Fireworks AI | `GET /v1/accounts/-/billingUsage` | 返回已用费用 |
+| 供应商 | 余额 API | 类型 | 说明 |
+|---|---|---|---|
+| DeepSeek | `GET /user/balance` | credit | 返回总额、可用余额，支持 CNY/USD |
+| Moonshot AI / Kimi | `GET /v1/users/me/balance` | credit | 返回可用余额、代金券余额、现金余额 |
+| OpenRouter | `GET /api/v1/credits` | credit | 需 Management API Key（非推理 Key） |
+| Fireworks AI | `GET /v1/accounts/-/billingUsage` | credit | 返回已用费用 |
+| OpenCode Go | `GET /v1/usage` | time | 返回 5小时/周/月 三个时间窗口的用量百分比和重置时间 |
 
 ## 不支持余额查询的供应商
 
 以下供应商暂无公开的余额查询 API，显示「暂不支持自动查询」并提供控制台链接：
 
-OpenAI、Anthropic、Google Gemini、Groq、Mistral、xAI、Together AI、Cerebras、NVIDIA、Hugging Face、Qwen（通义千问）、Xiaomi（小米）、Z.AI（智谱）、Kimi For Coding、Ant Ling（蚂蚁灵）
+OpenAI、Anthropic、Google Gemini、Groq、Mistral、xAI、Together AI、Cerebras、NVIDIA、Hugging Face、Qwen（通义千问）、Xiaomi Token Plan、Z.AI（智谱）、Kimi For Coding、Ant Ling（蚂蚁灵）、OpenCode Zen
 
 ## 当前限制
 

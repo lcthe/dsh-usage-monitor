@@ -46,6 +46,21 @@ function formatAmount(value: number | undefined, currency?: string): string {
   return formatted
 }
 
+function formatResetTime(iso: string): string {
+  const date = new Date(iso)
+  const now = new Date()
+  const diffMs = date.getTime() - now.getTime()
+  if (diffMs <= 0) return 'soon'
+  const diffH = Math.floor(diffMs / 3600000)
+  const diffM = Math.floor((diffMs % 3600000) / 60000)
+  if (diffH >= 24) {
+    const diffD = Math.floor(diffH / 24)
+    return `${diffD}d ${diffH % 24}h`
+  }
+  if (diffH > 0) return `${diffH}h ${diffM}m`
+  return `${diffM}m`
+}
+
 function getBalancePercent(balance: BalanceData['balance']): number | null {
   if (!balance?.total || balance.total <= 0) return null
   if (balance.remaining !== undefined) return Math.min(100, Math.max(0, (balance.remaining / balance.total) * 100))
@@ -91,30 +106,37 @@ export function ProviderCard({ provider, balance, loading, onRefresh, t }: Provi
           <div className={css.timeWindows}>
             {balance.balance.timeWindows.map((w) => {
               const isExceeded = w.status !== 'ok'
+              const color = isExceeded
+                ? 'var(--dsw-alias-color-error)'
+                : w.percent > 80
+                  ? 'var(--dsw-alias-color-warning)'
+                  : 'var(--dsw-alias-color-success)'
+              const radius = 16
+              const circumference = 2 * Math.PI * radius
+              const offset = circumference - (Math.min(100, w.percent) / 100) * circumference
               return (
                 <div key={w.label} className={css.timeWindow}>
-                  <div className={css.timeWindowHeader}>
-                    <span className={css.timeWindowLabel}>{t(w.label) || w.label}</span>
-                    <span className={`${css.timeWindowPercent} ${isExceeded ? css.exceeded : ''}`}>
-                      {isExceeded ? t('exceeded') : `${w.percent}%`}
+                  <div className={css.ringWrap}>
+                    <svg className={css.ring} viewBox="0 0 36 36">
+                      <circle className={css.ringBg} cx="18" cy="18" r={radius} />
+                      <circle
+                        className={css.ringFill}
+                        cx="18" cy="18" r={radius}
+                        stroke={color}
+                        strokeDasharray={circumference}
+                        strokeDashoffset={offset}
+                      />
+                    </svg>
+                    <span className={css.ringPercent} style={{ color }}>
+                      {isExceeded ? '!' : `${w.percent}`}
                     </span>
                   </div>
-                  <div className={css.progressBar}>
-                    <div
-                      className={css.progressFill}
-                      style={{
-                        width: `${Math.min(100, w.percent)}%`,
-                        backgroundColor: isExceeded
-                          ? 'var(--dsw-alias-color-error)'
-                          : w.percent > 80
-                            ? 'var(--dsw-alias-color-warning)'
-                            : 'var(--dsw-alias-color-success)',
-                      }}
-                    />
+                  <div className={css.timeWindowInfo}>
+                    <span className={css.timeWindowLabel}>{t(w.label) || w.label}</span>
+                    {w.resetsAt && (
+                      <span className={css.resetsAt}>{formatResetTime(w.resetsAt)}</span>
+                    )}
                   </div>
-                  {w.resetsAt && (
-                    <span className={css.resetsAt}>{t('resetsAt')} {new Date(w.resetsAt).toLocaleString()}</span>
-                  )}
                 </div>
               )
             })}
