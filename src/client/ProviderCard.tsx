@@ -87,6 +87,38 @@ export function ProviderCard({ provider, balance, loading, onRefresh, t }: Provi
             <span className={css.spinner} />
             <span>{t('querying')}</span>
           </div>
+        ) : provider.limitType === 'time' && balance?.balance?.timeWindows ? (
+          <div className={css.timeWindows}>
+            {balance.balance.timeWindows.map((w) => {
+              const isExceeded = w.status !== 'ok'
+              return (
+                <div key={w.label} className={css.timeWindow}>
+                  <div className={css.timeWindowHeader}>
+                    <span className={css.timeWindowLabel}>{t(w.label) || w.label}</span>
+                    <span className={`${css.timeWindowPercent} ${isExceeded ? css.exceeded : ''}`}>
+                      {isExceeded ? t('exceeded') : `${w.percent}%`}
+                    </span>
+                  </div>
+                  <div className={css.progressBar}>
+                    <div
+                      className={css.progressFill}
+                      style={{
+                        width: `${Math.min(100, w.percent)}%`,
+                        backgroundColor: isExceeded
+                          ? 'var(--dsw-alias-color-error)'
+                          : w.percent > 80
+                            ? 'var(--dsw-alias-color-warning)'
+                            : 'var(--dsw-alias-color-success)',
+                      }}
+                    />
+                  </div>
+                  {w.resetsAt && (
+                    <span className={css.resetsAt}>{t('resetsAt')} {new Date(w.resetsAt).toLocaleString()}</span>
+                  )}
+                </div>
+              )
+            })}
+          </div>
         ) : provider.limitType === 'time' ? (
           <div className={css.timeLimit}>
             <span className={css.timeLimitBadge}>{t('timeLimit')}</span>

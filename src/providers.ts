@@ -3,6 +3,17 @@
  * Each entry defines how to query the provider's balance API (if available).
  */
 
+export interface TimeWindow {
+  /** Window label: rolling (5h), weekly, monthly */
+  label: string
+  /** Status: ok, exceeded, etc. */
+  status: string
+  /** Usage percentage (0-100) */
+  percent: number
+  /** When this window resets (ISO string) */
+  resetsAt?: string
+}
+
 export interface BalanceInfo {
   /** Total balance (original currency) */
   total?: number
@@ -14,6 +25,8 @@ export interface BalanceInfo {
   currency?: string
   /** Whether the account is available */
   available?: boolean
+  /** Time-based usage windows (for subscription providers like OpenCode Go) */
+  timeWindows?: TimeWindow[]
   /** Raw response for debugging */
   raw?: unknown
 }
@@ -342,6 +355,19 @@ export const PROVIDERS: ProviderConfig[] = [
     apiKeyEnv: 'OPENCODE_GO_API_KEY',
     consoleUrl: 'https://opencode.ai/console',
     limitType: 'time',
+    balanceApi: {
+      url: 'https://opencode.ai/zen/go/v1/usage',
+      method: 'GET',
+      parse: (data: unknown) => {
+        const d = data as { usage?: { rolling?: { status?: string; percent?: number; resetsAt?: string }; weekly?: { status?: string; percent?: number; resetsAt?: string }; monthly?: { status?: string; percent?: number; resetsAt?: string } } }
+        const u = d.usage
+        const windows: TimeWindow[] = []
+        if (u?.rolling) windows.push({ label: 'rolling', status: u.rolling.status ?? 'ok', percent: u.rolling.percent ?? 0, resetsAt: u.rolling.resetsAt })
+        if (u?.weekly) windows.push({ label: 'weekly', status: u.weekly.status ?? 'ok', percent: u.weekly.percent ?? 0, resetsAt: u.weekly.resetsAt })
+        if (u?.monthly) windows.push({ label: 'monthly', status: u.monthly.status ?? 'ok', percent: u.monthly.percent ?? 0, resetsAt: u.monthly.resetsAt })
+        return { timeWindows: windows, raw: data }
+      },
+    },
   },
 ]
 
