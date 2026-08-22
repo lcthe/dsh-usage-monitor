@@ -93,6 +93,25 @@
   to { transform: rotate(360deg); }
 }
 
+.timeLimit {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.timeLimitBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--dsw-alias-color-accent-muted, rgba(59, 130, 246, 0.1));
+  color: var(--dsw-alias-color-accent);
+  font-size: 12px;
+  font-weight: 500;
+  width: fit-content;
+}
+
 .notSupported {
   width: 100%;
 }

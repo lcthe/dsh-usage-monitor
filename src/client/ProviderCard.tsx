@@ -11,6 +11,7 @@ export interface ProviderInfo {
   supportBalance: boolean
   consoleUrl: string
   apiKeyEnv: string
+  limitType?: 'credit' | 'time' | 'usage'
 }
 
 export interface BalanceData {
@@ -85,6 +86,11 @@ export function ProviderCard({ provider, balance, loading, onRefresh, t }: Provi
           <div className={css.loading}>
             <span className={css.spinner} />
             <span>{t('querying')}</span>
+          </div>
+        ) : provider.limitType === 'time' ? (
+          <div className={css.timeLimit}>
+            <span className={css.timeLimitBadge}>{t('timeLimit')}</span>
+            <span className={css.muted}>{t('timeLimitHint')}</span>
           </div>
         ) : !provider.supportBalance ? (
           <div className={css.notSupported}>

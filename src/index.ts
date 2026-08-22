@@ -85,8 +85,8 @@ export function apply(ctx: Context): void {
 
       try {
         if (req.method === 'POST' && endpoint === 'providers') {
-          // List all providers with their credential status
-          const results = await Promise.all(PROVIDERS.map(async (p) => {
+          // List only configured providers with their credential status
+          const all = await Promise.all(PROVIDERS.map(async (p) => {
             const ref = credentialRef(p.apiKeyEnv)
             const info = await ctx.credentials.describe(ref)
             return {
@@ -97,9 +97,10 @@ export function apply(ctx: Context): void {
               supportBalance: !!p.balanceApi,
               consoleUrl: p.consoleUrl,
               apiKeyEnv: p.apiKeyEnv,
+              limitType: p.limitType,
             }
           }))
-          ok(res, results)
+          ok(res, all.filter(p => p.configured))
           return
         }
 

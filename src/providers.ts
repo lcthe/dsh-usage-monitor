@@ -18,6 +18,8 @@ export interface BalanceInfo {
   raw?: unknown
 }
 
+export type LimitType = 'credit' | 'time' | 'usage'
+
 export interface ProviderConfig {
   /** Unique provider identifier (matches DSH provider IDs) */
   id: string
@@ -31,6 +33,8 @@ export interface ProviderConfig {
   apiKeyEnv: string
   /** Console/dashboard URL for manual checking */
   consoleUrl: string
+  /** Limit type: credit (balance), time (subscription with time windows), usage (pay-per-use) */
+  limitType?: LimitType
   /** Balance API configuration (undefined if not supported) */
   balanceApi?: {
     /** Endpoint URL or function to build it from baseUrl */
@@ -48,6 +52,7 @@ export const PROVIDERS: ProviderConfig[] = [
   // === Providers with balance API ===
   {
     id: 'deepseek',
+    limitType: 'credit',
     name: 'DeepSeek',
     nameZh: 'DeepSeek',
     baseUrl: 'https://api.deepseek.com',
@@ -72,6 +77,7 @@ export const PROVIDERS: ProviderConfig[] = [
   },
   {
     id: 'moonshotai',
+    limitType: 'credit',
     name: 'Moonshot AI',
     nameZh: '月之暗面',
     baseUrl: 'https://api.moonshot.ai/v1',
@@ -294,6 +300,24 @@ export const PROVIDERS: ProviderConfig[] = [
     baseUrl: 'https://api.ant-ling.com/v1',
     apiKeyEnv: 'ANT_LING_API_KEY',
     consoleUrl: 'https://ant-ling.com',
+  },
+  {
+    id: 'opencode',
+    name: 'OpenCode Zen',
+    nameZh: 'OpenCode Zen',
+    baseUrl: 'https://opencode.ai/zen/v1',
+    apiKeyEnv: 'OPENCODE_API_KEY',
+    consoleUrl: 'https://opencode.ai/console',
+    limitType: 'credit',
+  },
+  {
+    id: 'opencode-go',
+    name: 'OpenCode Go',
+    nameZh: 'OpenCode Go',
+    baseUrl: 'https://opencode.ai/zen/go/v1',
+    apiKeyEnv: 'OPENCODE_API_KEY',
+    consoleUrl: 'https://opencode.ai/console',
+    limitType: 'time',
   },
 ]
 
