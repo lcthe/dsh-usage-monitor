@@ -1,0 +1,4 @@
+# @lcthe/dsh-usage-monitor -- usage and credit balance monitor
+- insert:
+    - id: dsh-usage-monitor
+      name: '@lcthe/dsh-usage-monitor'

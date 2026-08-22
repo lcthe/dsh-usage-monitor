@@ -1,0 +1,72 @@
+import type { LocaleDict } from '@deepseek-ai/dsh-client-locale/client'
+import type {} from '@deepseek-ai/dsh-client-ui-slots'
+
+export const NS = 'dsh-usage-monitor' as const
+
+export type UsageMonitorLocaleKey = keyof typeof en
+
+export const zh: LocaleDict = {
+  'tab': '用量',
+  'title': '用量监控',
+  'subtitle': '查看各供应商的 API 余额和用量状态',
+  'loading': '加载中...',
+  'refresh': '刷新',
+  'refreshAll': '刷新全部',
+  'configured': '已配置',
+  'notConfigured': '未配置',
+  'querying': '查询中...',
+  'queryFailed': '查询失败',
+  'notSupported': '暂不支持自动查询',
+  'goToConsole': '前往控制台',
+  'balance': '余额',
+  'total': '总额',
+  'used': '已用',
+  'remaining': '剩余',
+  'available': '可用',
+  'unavailable': '不可用',
+  'currency': '货币',
+  'noApiKey': '未配置 API Key',
+  'error': '错误',
+  'apiKeyEnv': '环境变量',
+  'retry': '重试',
+  'allProviders': '全部供应商',
+  'withBalance': '支持查询',
+  'providerCount': '供应商数量',
+  'configuredCount': '已配置',
+} as const
+
+export const en: LocaleDict = {
+  'tab': 'Usage',
+  'title': 'Usage Monitor',
+  'subtitle': 'View API credit balance and usage status across providers',
+  'loading': 'Loading...',
+  'refresh': 'Refresh',
+  'refreshAll': 'Refresh All',
+  'configured': 'Configured',
+  'notConfigured': 'Not Configured',
+  'querying': 'Querying...',
+  'queryFailed': 'Query Failed',
+  'notSupported': 'Auto-query not supported',
+  'goToConsole': 'Go to Console',
+  'balance': 'Balance',
+  'total': 'Total',
+  'used': 'Used',
+  'remaining': 'Remaining',
+  'available': 'Available',
+  'unavailable': 'Unavailable',
+  'currency': 'Currency',
+  'noApiKey': 'No API Key configured',
+  'error': 'Error',
+  'apiKeyEnv': 'Env Variable',
+  'retry': 'Retry',
+  'allProviders': 'All Providers',
+  'withBalance': 'Balance Supported',
+  'providerCount': 'Providers',
+  'configuredCount': 'Configured',
+} as const
+
+declare module '@deepseek-ai/dsh-client-ui-slots' {
+  interface LocaleNamespaceMap {
+    'dsh-usage-monitor': UsageMonitorLocaleKey
+  }
+}
