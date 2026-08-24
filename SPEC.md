@@ -20,7 +20,14 @@
   - `time-window`：时间窗口进度条（5小时/周/月）+ 重置时间
   - `usage-only`：仅显示已用费用（如 $0.12 used）
 
-### 自定义供应商
+### 内置供应商查询覆盖
+- 内置供应商卡片支持打开「编辑查询配置」窗口。
+- 可配置查询 URL、GET/POST、Bearer Token/X-API-Key/无认证。
+- 可配置剩余、总额、已用字段的安全点号路径。
+- 配置由 Host 全局保存到 `~/.dsh/usage-monitor/config.json`，不保存 API Key。
+- 覆盖配置优先于源码内置查询；支持恢复默认配置。
+- 查询地址仅允许 HTTPS，并拒绝本机、回环、私网和云元数据地址。
+
 - 虚线卡片入口，对话框添加
 - 支持配置：名称、中文名称、计费方式（按量付费/订阅制）、API Key、控制台链接、Base URL
 - 测试按钮：验证 API Key 连接
@@ -53,7 +60,7 @@
 
 | 供应商 | 控制台 |
 |---|---|
-| OpenAI | [platform.openai.com](https://platform.openai.com) |
+| OpenAI | [chatgpt.com](https://chatgpt.com/) |
 | Anthropic | [console.anthropic.com](https://console.anthropic.com) |
 | Google Gemini | [aistudio.google.com](https://aistudio.google.com) |
 | Groq | [console.groq.com](https://console.groq.com) |
@@ -120,7 +127,7 @@
 - 余额数据为实时查询，无缓存机制，频繁刷新可能触发供应商限流。
 - 不支持历史用量趋势图表。
 - 不支持按模型或按时间段的用量细分。
-- 自定义供应商不支持余额查询（仅显示控制台链接）。
+- 自定义供应商不支持余额查询（仅显示控制台链接）；内置供应商可通过 Host 查询覆盖配置接入第三方查询接口。
 - 不支持 Azure OpenAI、Amazon Bedrock 等需要特殊认证方式的供应商。
 - 不支持 Google Vertex AI（使用 ADC 认证，无 API Key）。
 

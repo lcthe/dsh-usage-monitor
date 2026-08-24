@@ -5,6 +5,8 @@ import { NS } from './locales.ts'
 import { usageRpc } from './index.ts'
 import { ProviderCard, type ProviderInfo, type BalanceData } from './ProviderCard.tsx'
 import { AddProviderDialog, type CustomProvider } from './AddProviderDialog.tsx'
+import { ProviderQueryDialog } from './ProviderQueryDialog.tsx'
+import type { QueryOverride } from '../query-types.ts'
 import css from './usage-section.module.css'
 
 type UsageSectionProps = PropsRuntime<'settings.section'> & PropsLocale<typeof NS>
@@ -21,6 +23,7 @@ export function UsageSection({ t }: UsageSectionProps): JSX.Element | null {
   const [balances, setBalances] = useState<BalanceState>({})
   const [filter, setFilter] = useState<'all' | 'configured' | 'supported'>('all')
   const [showAddDialog, setShowAddDialog] = useState(false)
+  const [editingProvider, setEditingProvider] = useState<ProviderInfo | null>(null)
 
   const loadProviders = useCallback(async () => {
     setLoading(true)
@@ -67,6 +70,28 @@ export function UsageSection({ t }: UsageSectionProps): JSX.Element | null {
     setCustomProviders(list)
     localStorage.setItem('dsh-usage-monitor-custom', JSON.stringify(list))
   }, [])
+
+  const handleEditSave = useCallback(async (providerId: string, config: QueryOverride) => {
+    await usageRpc('query-config', { action: 'save', providerId, config })
+    setEditingProvider(null)
+    setBalances(prev => {
+      const next = { ...prev }
+      delete next[providerId]
+      return next
+    })
+    await loadProviders()
+  }, [loadProviders])
+
+  const handleEditReset = useCallback(async (providerId: string) => {
+    await usageRpc('query-config', { action: 'reset', providerId })
+    setEditingProvider(null)
+    setBalances(prev => {
+      const next = { ...prev }
+      delete next[providerId]
+      return next
+    })
+    await loadProviders()
+  }, [loadProviders])
 
   const handleAddCustom = useCallback((p: CustomProvider) => {
     saveCustomProviders([...customProviders, p])
@@ -153,6 +178,7 @@ export function UsageSection({ t }: UsageSectionProps): JSX.Element | null {
             balance={balances[p.id]?.data ?? null}
             loading={balances[p.id]?.loading ?? false}
             onRefresh={() => void queryBalance(p.id)}
+            onEdit={!p.id.startsWith('custom-') ? () => setEditingProvider(p) : undefined}
             onRemove={p.id.startsWith('custom-') ? () => handleRemoveCustom(p.id) : undefined}
             t={t}
           />
@@ -165,6 +191,15 @@ export function UsageSection({ t }: UsageSectionProps): JSX.Element | null {
 
       {showAddDialog && (
         <AddProviderDialog t={t} onClose={() => setShowAddDialog(false)} onAdd={handleAddCustom} />
+      )}
+      {editingProvider && (
+        <ProviderQueryDialog
+          t={t}
+          provider={editingProvider}
+          onClose={() => setEditingProvider(null)}
+          onSave={(config) => handleEditSave(editingProvider.id, config)}
+          onReset={() => handleEditReset(editingProvider.id)}
+        />
       )}
     </div>
   )

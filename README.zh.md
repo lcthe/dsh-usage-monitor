@@ -13,9 +13,10 @@ DSH 用量监控 — 查看各 LLM 供应商的 API 余额和用量状态。
 - **自动检测已配置供应商** — 从 DSH 凭据系统读取 API Key，无需手动输入
 - **卡片式 UI** — DSH 统一风格，响应式网格布局
 - **多种显示模式** — 人民币/美元余额、token 余量、时间窗口进度条
-- **自定义供应商** — 虚线卡片入口，支持测试连接
+- **自定义供应商** — 虚线卡片入口，API 地址必填，控制台链接可选
 - **输入框余量胶囊** — 工具栏显示当前模型供应商余额，切换模型/发送消息/点击胶囊时刷新
 - **控制台链接** — 不支持查询的供应商一键跳转控制台
+- **内置供应商查询覆盖** — 打开卡片编辑查询 URL、请求方式、认证方式和响应字段路径，适配第三方查询接口
 - **筛选功能** — 全部 / 已配置 / 支持查询
 - **国际化** — 中英文双语
 
@@ -72,7 +73,7 @@ DSH 启动后，打开**设置 → 用量**即可查看各供应商余额。
 
 | 供应商 | 控制台 |
 |---|---|
-| OpenAI | [platform.openai.com](https://platform.openai.com) |
+| OpenAI | [chatgpt.com](https://chatgpt.com/) |
 | Anthropic | [console.anthropic.com](https://console.anthropic.com) |
 | Google Gemini | [aistudio.google.com](https://aistudio.google.com) |
 | Groq | [console.groq.com](https://console.groq.com) |
@@ -88,7 +89,10 @@ DSH 启动后，打开**设置 → 用量**即可查看各供应商余额。
 | Ant Ling（蚂蚁灵） | [ant-ling.com](https://ant-ling.com) |
 | OpenCode Zen | [opencode.ai/workspace](https://opencode.ai/workspace) |
 
-## 🤝 贡献
+## 查询覆盖配置
+
+内置供应商卡片可以点击「编辑」配置第三方余额查询接口。覆盖配置由 DSH Host 全局保存到 `~/.dsh/usage-monitor/config.json`，不包含 API Key 值。编辑窗口支持 HTTPS 查询地址、GET/POST、Bearer Token、X-API-Key、无认证，以及安全的点号响应字段路径；本机、私网、回环和云元数据地址会被拒绝。
+
 
 欢迎提交 Issue 和 PR！
 

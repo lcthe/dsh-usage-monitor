@@ -13,7 +13,8 @@ A DSH plugin that adds a **Usage** page to the settings UI. It automatically rea
 - **Auto-detect configured providers** — reads API keys from DSH credentials, no manual input needed
 - **Card-based UI** — DSH unified card style, responsive grid layout
 - **Multiple display modes** — currency (¥/$), token count, time-window progress bars
-- **Custom providers** — add your own providers with test connection
+- **Custom providers** — add and remove display-only provider cards; Base URL is required and the console URL is optional
+- **Built-in query overrides** — edit query URL, method, authentication, and response field paths for third-party balance endpoints
 - **Input capsule** — balance in composer toolbar, refreshes on provider switch, message send, or click
 - **Console links** — one-click access to provider dashboards
 - **Filtering** — filter by All / Configured / Balance Supported
@@ -72,7 +73,7 @@ After DSH starts, open **Settings → Usage** to view your provider balances.
 
 | 供应商 | 控制台 |
 |---|---|
-| OpenAI | [platform.openai.com](https://platform.openai.com) |
+| OpenAI | [chatgpt.com](https://chatgpt.com/) |
 | Anthropic | [console.anthropic.com](https://console.anthropic.com) |
 | Google Gemini | [aistudio.google.com](https://aistudio.google.com) |
 | Groq | [console.groq.com](https://console.groq.com) |
@@ -88,7 +89,10 @@ After DSH starts, open **Settings → Usage** to view your provider balances.
 | Ant Ling（蚂蚁灵） | [ant-ling.com](https://ant-ling.com) |
 | OpenCode Zen | [opencode.ai/workspace](https://opencode.ai/workspace) |
 
-## 🤝 Contributing
+## Query overrides
+
+Built-in provider cards can be edited from the **Edit** action. Overrides are stored globally by the DSH host in `~/.dsh/usage-monitor/config.json` and do not contain API key values. The editor supports HTTPS query URLs, GET/POST, Bearer Token, X-API-Key, no authentication, and safe dot-separated response field paths. Localhost, private-network, loopback, and cloud metadata addresses are rejected.
+
 
 Issues and PRs are welcome!
 

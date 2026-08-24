@@ -125,7 +125,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 80px;
+  min-height: 150px;
   border: 1px dashed var(--dsw-alias-border-l3);
   border-radius: 12px;
   background: transparent;

@@ -1,3 +1,4 @@
+import type { QueryOverride } from '../query-types.ts'
 import type { PropsLocale } from '@deepseek-ai/dsh-client-ui-slots'
 import type { UsageMonitorLocaleKey } from './locales.ts'
 import { NS } from './locales.ts'
@@ -13,6 +14,9 @@ export interface ProviderInfo {
   apiKeyEnv: string
   limitType?: 'credit' | 'time' | 'usage'
   displayMode?: 'currency-cny' | 'currency-usd' | 'token' | 'time-window' | 'usage-only' | null
+  hasOverride?: boolean
+  queryOverride?: QueryOverride | null
+  defaultQuery?: QueryOverride | null
 }
 
 export interface BalanceData {
@@ -23,6 +27,12 @@ export interface BalanceData {
     remaining?: number
     currency?: string
     available?: boolean
+    timeWindows?: Array<{
+      label: string
+      status: string
+      percent: number
+      resetsAt?: string
+    }>
   }
   error?: string
   consoleUrl?: string
@@ -33,6 +43,7 @@ export interface ProviderCardProps extends PropsLocale<typeof NS> {
   balance: BalanceData | null
   loading: boolean
   onRefresh: () => void
+  onEdit?: () => void
   onRemove?: () => void
 }
 
@@ -75,7 +86,7 @@ function getStatusColor(percent: number | null): string {
   return 'var(--dsw-alias-state-error-primary)'
 }
 
-export function ProviderCard({ provider, balance, loading, onRefresh, onRemove, t }: ProviderCardProps): JSX.Element {
+export function ProviderCard({ provider, balance, loading, onRefresh, onEdit, onRemove, t }: ProviderCardProps): JSX.Element {
   const percent = getBalancePercent(balance?.balance)
   const statusColor = getStatusColor(percent)
 
@@ -176,14 +187,19 @@ export function ProviderCard({ provider, balance, loading, onRefresh, onRemove, 
       </div>
 
       <div className={css.footer}>
-        <a className={css.consoleLink} href={provider.consoleUrl} target="_blank" rel="noopener noreferrer">
-          {t('goToConsole')} ↗
-        </a>
+        {provider.consoleUrl && (
+          <a className={css.consoleLink} href={provider.consoleUrl} target="_blank" rel="noopener noreferrer">
+            {t('goToConsole')} ↗
+          </a>
+        )}
         <div className={css.footerActions}>
-          {provider.configured && (
+          {provider.configured && provider.supportBalance && (
             <button className={css.refreshBtn} onClick={onRefresh} disabled={loading}>
               {loading ? '...' : t('refresh')}
             </button>
+          )}
+          {onEdit && (
+            <button className={css.editBtn} onClick={onEdit}>{t('edit')}</button>
           )}
           {onRemove && (
             <button className={css.removeBtn} onClick={onRemove}>{t('remove')}</button>

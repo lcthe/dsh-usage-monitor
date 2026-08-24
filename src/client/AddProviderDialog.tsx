@@ -28,13 +28,14 @@ export function AddProviderDialog({ t, onClose, onAdd }: AddProviderDialogProps)
   const [baseUrl, setBaseUrl] = useState('')
   const [testState, setTestState] = useState<'idle' | 'testing' | 'ok' | 'fail'>('idle')
 
-  const canSubmit = name.trim() !== '' && apiKeyEnv.trim() !== '' && consoleUrl.trim() !== ''
+  const canSubmit = name.trim() !== '' && apiKeyEnv.trim() !== '' && baseUrl.trim() !== ''
 
   async function handleTest() {
     setTestState('testing')
     try {
       const envVar = apiKeyEnv.trim()
-      const url = `${consoleUrl.trim()}/v1/models`
+      const base = baseUrl.trim().replace(/\/$/, '')
+      const url = `${base}${/\/v1$/i.test(base) ? '/models' : '/v1/models'}`
       const res = await fetch('/dsh-usage-monitor-api/test-provider', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
@@ -104,7 +105,7 @@ export function AddProviderDialog({ t, onClose, onAdd }: AddProviderDialogProps)
                 type="button"
                 className={`${css.testBtn} ${testState === 'ok' ? css.testOk : ''} ${testState === 'fail' ? css.testFail : ''}`}
                 onClick={handleTest}
-                disabled={!apiKeyEnv.trim() || testState === 'testing'}
+                disabled={!apiKeyEnv.trim() || !baseUrl.trim() || testState === 'testing'}
               >
                 {testState === 'testing' ? '...' : testState === 'ok' ? '✓' : testState === 'fail' ? '✗' : t('test')}
               </button>
@@ -112,12 +113,12 @@ export function AddProviderDialog({ t, onClose, onAdd }: AddProviderDialogProps)
           </label>
 
           <label className={css.field}>
-            <span className={css.label}>{t('consoleUrl')} <span className={css.required}>*</span></span>
+            <span className={css.label}>{t('consoleUrl')}</span>
             <input className={css.input} type="url" value={consoleUrl} onChange={(e) => setConsoleUrl(e.target.value)} placeholder="https://..." />
           </label>
 
           <label className={css.field}>
-            <span className={css.label}>{t('baseUrl')}</span>
+            <span className={css.label}>{t('baseUrl')} <span className={css.required}>*</span></span>
             <input className={css.input} type="url" value={baseUrl} onChange={(e) => setBaseUrl(e.target.value)} placeholder="https://api.example.com/v1" />
           </label>
         </div>

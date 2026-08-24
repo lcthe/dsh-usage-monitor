@@ -49,6 +49,8 @@ export interface ProviderConfig {
   consoleUrl: string
   /** Limit type: credit (balance), time (subscription with time windows), usage (pay-per-use) */
   limitType?: LimitType
+  /** Display formatting mode */
+  displayMode?: DisplayMode
   /** Balance API configuration (undefined if not supported) */
   balanceApi?: {
     /** Endpoint URL or function to build it from baseUrl */
@@ -190,7 +192,7 @@ export const PROVIDERS: ProviderConfig[] = [
     nameZh: 'OpenAI',
     baseUrl: 'https://api.openai.com/v1',
     apiKeyEnv: 'OPENAI_API_KEY',
-    consoleUrl: 'https://platform.openai.com',
+    consoleUrl: 'https://chatgpt.com/',
   },
   {
     id: 'anthropic',
