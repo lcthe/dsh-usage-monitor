@@ -7,7 +7,6 @@ import css from './add-provider-dialog.module.css'
 export interface CustomProvider {
   id: string
   name: string
-  nameZh: string
   baseUrl: string
   apiKeyEnv: string
   consoleUrl: string
@@ -21,7 +20,6 @@ interface AddProviderDialogProps extends PropsLocale<typeof NS> {
 
 export function AddProviderDialog({ t, onClose, onAdd }: AddProviderDialogProps): JSX.Element {
   const [name, setName] = useState('')
-  const [nameZh, setNameZh] = useState('')
   const [limitType, setLimitType] = useState<'credit' | 'time' | 'usage'>('credit')
   const [consoleUrl, setConsoleUrl] = useState('')
   const [apiKeyEnv, setApiKeyEnv] = useState('')
@@ -55,7 +53,6 @@ export function AddProviderDialog({ t, onClose, onAdd }: AddProviderDialogProps)
     onAdd({
       id,
       name: name.trim(),
-      nameZh: nameZh.trim() || name.trim(),
       baseUrl: baseUrl.trim(),
       apiKeyEnv: apiKeyEnv.trim(),
       consoleUrl: consoleUrl.trim(),
@@ -76,11 +73,6 @@ export function AddProviderDialog({ t, onClose, onAdd }: AddProviderDialogProps)
           <label className={css.field}>
             <span className={css.label}>{t('providerName')} <span className={css.required}>*</span></span>
             <input className={css.input} type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. My LLM Provider" />
-          </label>
-
-          <label className={css.field}>
-            <span className={css.label}>{t('providerNameZh')}</span>
-            <input className={css.input} type="text" value={nameZh} onChange={(e) => setNameZh(e.target.value)} placeholder="e.g. 我的供应商" />
           </label>
 
           <label className={css.field}>

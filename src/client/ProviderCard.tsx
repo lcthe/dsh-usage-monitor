@@ -7,7 +7,7 @@ import css from './provider-card.module.css'
 export interface ProviderInfo {
   id: string
   name: string
-  nameZh: string
+  nameZh?: string
   configured: boolean
   supportBalance: boolean
   consoleUrl: string
@@ -128,7 +128,7 @@ export function ProviderCard({ provider, balance, loading, onRefresh, onEdit, on
                   <div className={css.twHeader}>
                     <span className={css.twLabel}>
                       {t(w.label) || w.label}
-                      {w.resetsAt && <span className={css.twReset}> ({formatResetTime(w.resetsAt)} 重置)</span>}
+                      {w.resetsAt && <span className={css.twReset}> ({formatResetTime(w.resetsAt)} {t('resetsAt')})</span>}
                     </span>
                     <span className={css.twPercent} style={{ color }}>
                       {isExceeded ? t('exceeded') : `${w.percent}%`}

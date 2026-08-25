@@ -106,7 +106,7 @@ export function BalanceCapsule({ directory, useSession, t }: BalanceCapsuleProps
     const dm = p.displayMode
     if (dm === 'time-window' && p.balance?.timeWindows) {
       return p.balance.timeWindows.map(w => {
-        const label = w.label === 'rolling' ? '5h' : w.label === 'weekly' ? '周' : '月'
+        const label = w.label === 'rolling' ? t('rolling') : w.label === 'weekly' ? t('weekly') : t('monthly')
         return `${label} ${w.percent}%`
       }).join('  ')
     }
