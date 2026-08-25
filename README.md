@@ -22,7 +22,21 @@ A DSH plugin that adds a **Usage** page to the settings UI. It automatically rea
 
 ### Screenshots
 
-![Usage Monitor](docs/1.png)
+#### 1. Balance capsule in the composer
+
+![Balance capsule](1.png)
+
+#### 2. Usage overview
+
+![Usage overview](2.png)
+
+#### 3. Query configuration editor
+
+![Query configuration editor](3.png)
+
+#### 4. Custom provider form
+
+![Custom provider form](4.png)
 
 ## 📐 Requirements
 
