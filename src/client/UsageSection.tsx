@@ -139,7 +139,31 @@ export function UsageSection({ t }: UsageSectionProps): JSX.Element | null {
     <div className={css.root}>
       <div className={css.header}>
         <div className={css.titleGroup}>
-          <h2 className={css.title}>{t('title')}</h2>
+          <div className={css.titleRow}>
+            <h2 className={css.title}>{t('title')}</h2>
+            <span className={css.infoWrap}>
+              <button
+                className={css.infoButton}
+                type="button"
+                aria-label={t('usageInfo')}
+                aria-describedby="dsh-usage-monitor-info"
+              >
+                ?
+              </button>
+              <span className={css.infoTooltip} id="dsh-usage-monitor-info" role="tooltip">
+                <ol>
+                  <li>{t('usageInfoAutoSync')}</li>
+                  <li>
+                    {t('usageInfoFeedbackPrefix')}{' '}
+                    <a href="https://github.com/lcthe/dsh-usage-monitor" target="_blank" rel="noopener noreferrer">
+                      {t('usageInfoRepository')}
+                    </a>
+                    {t('usageInfoFeedbackSuffix')}
+                  </li>
+                </ol>
+              </span>
+            </span>
+          </div>
           <p className={css.subtitle}>{t('subtitle')}</p>
         </div>
         <div className={css.actions}>

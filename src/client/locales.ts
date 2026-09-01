@@ -8,6 +8,11 @@ export type UsageMonitorLocaleKey = keyof typeof en
 export const zh: LocaleDict = {
   'tab': '用量',
   'title': '用量监控',
+  'usageInfo': '用量监控说明',
+  'usageInfoAutoSync': '自动同步已添加的模型供应商。',
+  'usageInfoFeedbackPrefix': '目前仅支持 DeepSeek 官方和 OpenCode Go 的查询，其他供应商尚未测试；如有问题，请在',
+  'usageInfoRepository': '代码仓库',
+  'usageInfoFeedbackSuffix': '反馈。',
   'subtitle': '查看各供应商的 API 余额和用量状态',
   'loading': '加载中...',
   'refresh': '刷新',
@@ -71,6 +76,11 @@ export const zh: LocaleDict = {
 export const en: LocaleDict = {
   'tab': 'Usage',
   'title': 'Usage Monitor',
+  'usageInfo': 'Usage monitor information',
+  'usageInfoAutoSync': 'Automatically syncs added model providers.',
+  'usageInfoFeedbackPrefix': 'Currently, only DeepSeek official and OpenCode Go queries are supported; other providers have not been tested. Please report issues in the',
+  'usageInfoRepository': 'code repository',
+  'usageInfoFeedbackSuffix': '.',
   'subtitle': 'View API credit balance and usage status across providers',
   'loading': 'Loading...',
   'refresh': 'Refresh',
